@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: java-app
-          image: signinvipin/az-classic-pipeline:$(VER) # <-- REPLACE with ${VER} from Jenkins
+          image: "signinvipin/az-classic-pipeline:$(VER)" # <-- REPLACE with ${VER} from Jenkins
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
