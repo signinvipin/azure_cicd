@@ -1,0 +1,48 @@
+Setup VM for Azure Classic Pipeline:
+------------------------------------
+
+Create vm with arm64 architecture and centOS
+
+Update centOS
+sudo yum update -y
+
+install java-17-devel
+sudo yum install java-17-devel
+Verify 
+java --version
+javac -version
+
+Install maven
+
+maven download link
+https://maven.apache.org/download.cgi
+
+curl -O https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
+
+setup goals
+mvn clean package -DskipTests
+
+Install Git
+sudo yum install git
+
+Install Docker
+
+add user to docker group
+sudo usermod -aG docker azureuser
+
+
+
+On portal azure
+
+create cluster and service connection
+
+> For docker Image version in kubernetes deployment:
+-------------------------------------------
+Use 'inline' sed to patch the variable
+
+If you want more control or don't like using FileTransform:
+
+Add a Bash task before kubectl:
+sed -i "s|\$(VER)|$VER|g" app-deployment.yaml
+
+
