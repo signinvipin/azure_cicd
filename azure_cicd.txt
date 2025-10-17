@@ -26,23 +26,52 @@ Install Git
 sudo yum install git
 
 Install Docker
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable docker
 
 add user to docker group
 sudo usermod -aG docker azureuser
 
+Setup agent on VM
+sudo curl -O 
+sudo -zxvf 
+sudo ./bin/installdependencies.sh
+./config.sh
+https://dev.azure.com/third8devops
+pool name - az-classic-pool
 
+./run.sh
 
 On portal azure
 
 create cluster and service connection
+??
+
+Push docker images to repository as latest and like version 20
+--------------------------------------------------------------
+Classic Pipeline Setup with $(Build.BuildId)
+1. Add Docker Build Task
+   Command: buildAndPush
+   Tags: $(Build.BuildId),latest
+   
+This builds signinvipin/az-classic-pipeline:20 (if BuildId is 20)
+
+#2. Docker Push Task – Push version tag
+#   Command: push
+#   Tags: $(Build.BuildId)
+#
+#2. Docker Push Task – Push version tag
+#   Command: push
+#   Tags: latest
+
+#or simply put 
+#Tags: $(Build.BuildId),latest
+
+
+*for 3.2.3 like versioning - change above
 
 > For docker Image version in kubernetes deployment:
 -------------------------------------------
-Use 'inline' sed to patch the variable
-
-If you want more control or don't like using FileTransform:
-
-Add a Bash task before kubectl:
-sed -i "s|\$(VER)|$VER|g" app-deployment.yaml
 
 
