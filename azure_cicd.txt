@@ -25,6 +25,9 @@ mvn clean package -DskipTests
 Install Git
 sudo yum install git
 
+Download & setup az-agent
+curl -L https://download.agent.dev.azure.com/agent/4.261.0/vsts-agent-linux-arm64-4.261.0.tar.gz -o vsts-agent-linux-arm64-4.261.0.tar.gz
+
 Install Docker
 sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -51,22 +54,13 @@ create cluster and service connection
 Push docker images to repository as latest and like version 20
 --------------------------------------------------------------
 Classic Pipeline Setup with $(Build.BuildId)
-1. Add Docker Build Task
+1. Add Docker Build and Push Task
    Command: buildAndPush
    Tags: $(Build.BuildId),latest
    
-This builds signinvipin/az-classic-pipeline:20 (if BuildId is 20)
-
-#2. Docker Push Task – Push version tag
-#   Command: push
-#   Tags: $(Build.BuildId)
-#
-#2. Docker Push Task – Push version tag
-#   Command: push
-#   Tags: latest
-
-#or simply put 
+#simply put 
 #Tags: $(Build.BuildId),latest
+#This will push same image with same digest to docker repository
 
 
 *for 3.2.3 like versioning - change above
