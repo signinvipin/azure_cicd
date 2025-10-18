@@ -13,7 +13,7 @@ public class HelloController {
             <html>
               <body>
                 <h2>Hello! This is a test app.</h2>
-                <p>Congratulations on setting up the Docker image successfully.</p>
+                <p>Congratulations on deploying Docker image successfully using Azure DevOps classic editor.</p>
                 <pre>
   /\\_/\\  
  ( o.o ) 
