@@ -65,7 +65,29 @@ Classic Pipeline Setup with $(Build.BuildId)
 
 *for 3.2.3 like versioning - change above
 
+
 > For docker Image version in kubernetes deployment:
 -------------------------------------------
+####latest tag is typically used in development/testing for convenience.
 
+How to implement using classic pipeline editor?
+1.  Make sure to have a Kubernetes service connection configured in Azure DevOps.
+   This allows Azure DevOps to run kubectl commands against cluster.
+2. After the Docker build & push step (where you push the latest image), add a Command Line or Bash task.
+   Go to Pipeline > Tasks > Add Task.
+   Search for Command Line or Bash.
+   Add the task after your image push step.
+3. Configure the Command Line/Bash task (add as next step or inline script):
+   Set Script to:
+   kubectl rollout restart deployment java-app --namespace default
+
+4. Make sure the task has access to the Kubernetes cluster by:
+   Selecting the Kubernetes service connection you created.
+   Or by setting up the proper kubeconfig and credentials in the pipeline agent.
+
+5. Save and run the pipeline
+   Every time the pipeline runs and pushes the latest image, this step will restart your deployment pods,    forcing Kubernetes to pull the new image.
+
+
+####Versioned tags are preferred in production for traceability and immutability.
 
