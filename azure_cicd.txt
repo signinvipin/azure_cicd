@@ -48,46 +48,41 @@ pool name - az-classic-pool
 
 On portal azure
 
-create cluster and service connection
-??
+Create cluster and service connection:
+--------------------------------------
+Github
+Docker
+Azure Resource Manager
+kubernetes
 
-Push docker images to repository as latest and like version 20
---------------------------------------------------------------
-Classic Pipeline Setup with $(Build.BuildId)
-1. Add Docker Build and Push Task
-   Command: buildAndPush
-   Tags: $(Build.BuildId),latest
-   
-#simply put 
-#Tags: $(Build.BuildId),latest
-#This will push same image with same digest to docker repository
+Configure Classic Editor Tasks:
+-------------------------------
+Pipeline - Build pipeline > Agent pool - az-classic-pool
+Parameters - Maven POM file - pom.xml
+Get source - GitHub > select repository and branch to pull code
 
+Under Agent
+> Add Maven task
+  Goals - clean package -DskipTests
 
+> Add Docker task
+  Add Docker Build and Push Task
+  Command: buildAndPush
+  Tags: $(Build.BuildId),latest
+  #This will push same image with same digest to docker repository
 *for 3.2.3 like versioning - change above
 
 
-> For docker Image version in kubernetes deployment:
--------------------------------------------
-####latest tag is typically used in development/testing for convenience.
+> Add kubectl task
+  command: rollout
+  service connection: Kubernetes Service Connection
+  Kubernetes service connection: az-classic-cluster-conn
+  Arguments: restart deployment java-app --namespace default
 
-How to implement using classic pipeline editor?
-1.  Make sure to have a Kubernetes service connection configured in Azure DevOps.
-   This allows Azure DevOps to run kubectl commands against cluster.
-2. After the Docker build & push step (where you push the latest image), add a Command Line or Bash task.
-   Go to Pipeline > Tasks > Add Task.
-   Search for Command Line or Bash.
-   Add the task after your image push step.
-3. Configure the Command Line/Bash task (add as next step or inline script):
-   Set Script to:
-   kubectl rollout restart deployment java-app --namespace default
-
-4. Make sure the task has access to the Kubernetes cluster by:
-   Selecting the Kubernetes service connection you created.
-   Or by setting up the proper kubeconfig and credentials in the pipeline agent.
-
-5. Save and run the pipeline
-   Every time the pipeline runs and pushes the latest image, this step will restart your deployment pods,    forcing Kubernetes to pull the new image.
-
+> Add kubectl task
+##latest tag in app-deployment.yaml is typically used in development/testing for convenience.
+  command: apply
+  Arguments: -f app-deployment.yaml
 
 ####Versioned tags are preferred in production for traceability and immutability.
 
