@@ -17,6 +17,7 @@ spec:
       containers:
         - name: java-app
           image: signinvipin/az-classic-pipeline:latest
+#         dev-test env use latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -76,5 +77,4 @@ spec:
 #                 name: java-app-service
 #                 port:
 #                   number: 80
-
 

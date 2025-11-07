@@ -1,0 +1,37 @@
+pool:
+  name: az-classic-pool
+  demands: maven
+
+variables:
+  mavenPOMFile: 'pom.xml'
+
+steps:
+- task: Maven@3
+  displayName: 'Maven pom.xml'
+  inputs:
+    mavenPomFile: '$(Parameters.mavenPOMFile)'
+    goals: 'clean package -DskipTests'
+
+- task: Docker@2
+  displayName: buildAndPush
+  inputs:
+    containerRegistry: 'az-classic-docker-conn'
+    repository: 'signinvipin/az-classic-pipeline'
+    tags: '$(Build.BuildId),latest'
+
+- task: Kubernetes@1
+  displayName: 'kubectl rollout'
+  inputs:
+    kubernetesServiceEndpoint: 'az-classic-cluster-conn'
+    command: rollout
+    arguments: 'restart deployment java-app --namespace default'
+    versionSpec: 1.32.7
+
+- task: Kubernetes@1
+  displayName: 'kubectl apply'
+  inputs:
+    kubernetesServiceEndpoint: 'az-classic-cluster-conn'
+    command: apply
+    arguments: '-f app-deployment.yaml'
+
+

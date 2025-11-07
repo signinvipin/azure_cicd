@@ -72,7 +72,6 @@ Under Agent
   #This will push same image with same digest to docker repository
 *for 3.2.3 like versioning - change above
 
-
 > Add kubectl task
   command: rollout
   service connection: Kubernetes Service Connection
@@ -82,7 +81,21 @@ Under Agent
 > Add kubectl task
 ##latest tag in app-deployment.yaml is typically used in development/testing for convenience.
   command: apply
-  Arguments: -f app-deployment.yaml
+  Arguments: -f app-deployment-dev-test.yaml
 
+for production, include below step in above steps:
 ####Versioned tags are preferred in production for traceability and immutability.
+after docker build and push, 
+> Add bash script/powershell script as,
+
+sed -i "s|image: signinvipin/az-classic-pipeline:.*|image: signinvipin/az-classic-pipeline:$(Build.BuildId)|" app-deployment-prod.yaml
+
+** Learn -
+ Templating tools (e.g., Helm) - At scale in production - Used for complex apps or multiple environments
+**
+
+
+
+
+
 
