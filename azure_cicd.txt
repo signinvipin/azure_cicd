@@ -13,17 +13,21 @@ java --version
 javac -version
 
 Install maven
-
-maven download link
+--------------
+> maven download link
 https://maven.apache.org/download.cgi
 
+> Download maven
 curl -O https://dlcdn.apache.org/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz
 
-setup goals
+> setup goals
 mvn clean package -DskipTests
 
+
 Install Git
+------------
 sudo yum install git
+
 
 Download & setup az-agent
 curl -L https://download.agent.dev.azure.com/agent/4.261.0/vsts-agent-linux-arm64-4.261.0.tar.gz -o vsts-agent-linux-arm64-4.261.0.tar.gz
@@ -83,19 +87,24 @@ Under Agent
   command: apply
   Arguments: -f app-deployment-dev-test.yaml
 
-for production, include below step in above steps:
+
+For Production, 
+include below step in above steps:
+
 ####Versioned tags are preferred in production for traceability and immutability.
 after docker build and push, 
+
 > Add bash script/powershell script as,
 
-sed -i "s|image: signinvipin/az-classic-pipeline:.*|image: signinvipin/az-classic-pipeline:$(Build.BuildId)|" app-deployment-prod.yaml
+sed -i "s|image: signinvipin/az-classic-pipeline:.*|image: signinvipin/az-classic-pipeline:$(Build.BuildId)|" app-deployment-prod-classicpipeline.yaml
 
 ** Learn -
  Templating tools (e.g., Helm) - At scale in production - Used for complex apps or multiple environments
 **
 
 
-
+AZURE CICD w/ YAML
+------------------
 
 
 

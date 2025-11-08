@@ -1,0 +1,53 @@
+# Create and test classic pipeline 
+# if everything works as expected then export yaml file as
+
+variables:
+- name: BuildParameters.mavenPOMFile
+  value: pom.xml
+name: $(date:yyyyMMdd)$(rev:.r)
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    name: az-classic-pool
+  steps:
+  - checkout: self
+    clean: true
+    fetchTags: false
+  - task: Maven@3
+    displayName: Maven pom.xml
+    inputs:
+      mavenPOMFile: $(BuildParameters.mavenPOMFile)
+      goals: clean package -DskipTests
+  - task: Docker@2
+    displayName: buildAndPush
+    inputs:
+      containerRegistry: 25ce8a14-09f1-49fc-9acd-2b57f43adb26
+      # containerRegistry: 'az-classic-docker-conn'
+      # aka docker registry service connection ID
+      repository: signinvipin/az-classic-pipeline
+      tags: $(Build.BuildId),latest
+  - task: Kubernetes@1
+    displayName: kubectl rollout
+    inputs:
+      kubernetesServiceEndpoint: 7f882865-6733-4121-a27c-03b1321b4898
+      # kubernetesServiceEndpoint: 'az-classic-cluster-conn'
+      # aka kubernetes service connection ID
+      command: rollout
+      arguments: restart deployment java-app --namespace default
+      versionSpec: 1.32.7
+  - task: Kubernetes@1
+    displayName: kubectl apply
+    inputs:
+      kubernetesServiceEndpoint: 7f882865-6733-4121-a27c-03b1321b4898
+      # kubernetesServiceEndpoint: 'az-classic-cluster-conn'
+      # aka kubernetes service connection ID
+      command: apply
+      arguments: -f app-deployment.yaml
+...
+

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: java-app
-          image: signinvipin/az-classic-pipeline:latest
+          image: signinvipin/az-classic-pipeline:$(Build.BuildId)
           # prod env uses version not latest
           imagePullPolicy: Always
           ports:
